@@ -8,13 +8,10 @@ A self-hostable Chrome Extension + SaaS monorepo that injects an AI writing tool
 
 ## Demo
 
-**Gmail** — compose and reply with AI-generated drafts:
-
-![Gmail demo](docs/images/gmail.gif)
-
-**Slack** — rewrite messages before you send:
-
-![Slack demo](docs/images/slack.gif)
+| Slack | Gmail |
+|---|---|
+| ![Slack](docs/images/slack.gif) | ![Gmail](docs/images/gmail.gif) |
+| Rewrite messages before sending | Compose & reply with AI drafts |
 
 ---
 
