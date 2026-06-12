@@ -34967,7 +34967,13 @@ function buildSystemPrompt(options) {
     parts.push(`Additional context: ${resolvedSystemPrompt}`);
   }
   parts.push(
-    "Return ONLY the rewritten email body. Do not include a subject line. Use newlines to separate paragraphs naturally, as a real email would look. Do not include any explanations or labels."
+    `Return ONLY the rewritten email as a complete message. Structure it as:
+- A greeting line addressing the recipient by name (e.g. "Hi [Name],")
+- The body paragraphs, separated by blank lines
+- A closing line (e.g. "Best regards,")
+- The sender's name on its own line
+
+Do not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" \u2014 use the actual names.`
   );
   return parts.join("\n\n");
 }

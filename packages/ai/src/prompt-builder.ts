@@ -55,7 +55,7 @@ export function buildSystemPrompt(options: BuildPromptOptions): string {
   }
 
   parts.push(
-    'Return ONLY the rewritten email body. Do not include a subject line. Use newlines to separate paragraphs naturally, as a real email would look. Do not include any explanations or labels.',
+    'Return ONLY the rewritten email as a complete message. Structure it as:\n- A greeting line addressing the recipient by name (e.g. "Hi [Name],")\n- The body paragraphs, separated by blank lines\n- A closing line (e.g. "Best regards,")\n- The sender\'s name on its own line\n\nDo not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" — use the actual names.',
   )
 
   return parts.join('\n\n')
