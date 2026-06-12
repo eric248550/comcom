@@ -2,11 +2,11 @@ import type { PlasmoCSConfig } from 'plasmo'
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import type { RewriteMode, PromptTemplate } from '@comcom/types'
 import { rewriteText, getPrompts } from '../lib/api'
-import { getSelectedText, replaceSelectedTextInCompose, isInsideGmailCompose, getEmailContext } from '../lib/gmail'
+import { getSelectedText, replaceSelectedTextInCompose, isInsideSlackCompose, getSlackContext } from '../lib/slack'
 import { RewriteToolbar } from '../components/rewrite-toolbar'
 
 export const config: PlasmoCSConfig = {
-  matches: ['https://mail.google.com/*'],
+  matches: ['https://app.slack.com/*'],
   run_at: 'document_idle',
 }
 
@@ -25,7 +25,7 @@ interface ToolbarPosition {
   anchorBottom: number  // viewport-relative bottom of selection
 }
 
-export default function GmailContentScript() {
+export default function SlackContentScript() {
   const [visible, setVisible] = useState(false)
   const [position, setPosition] = useState<ToolbarPosition>({ top: 0, left: 0, anchorTop: 0, anchorBottom: 0 })
   const [selectedText, setSelectedText] = useState('')
@@ -65,11 +65,12 @@ export default function GmailContentScript() {
     const anchorNode = selection.anchorNode
     if (!anchorNode) return
 
-    const element = anchorNode.nodeType === Node.TEXT_NODE
-      ? anchorNode.parentElement
-      : anchorNode as Element
+    const element =
+      anchorNode.nodeType === Node.TEXT_NODE
+        ? anchorNode.parentElement
+        : (anchorNode as Element)
 
-    if (!isInsideGmailCompose(element)) {
+    if (!isInsideSlackCompose(element)) {
       setVisible(false)
       return
     }
@@ -95,8 +96,6 @@ export default function GmailContentScript() {
 
     const handleClickOutside = (e: MouseEvent) => {
       if (!toolbarRef.current) return
-      // In shadow DOM, clicks inside are retargeted to the shadow host at the document level,
-      // so toolbarRef.contains(e.target) would always be false. Check the shadow host instead.
       const root = toolbarRef.current.getRootNode()
       const shadowHost = root instanceof ShadowRoot ? root.host : null
       const isInsideToolbar = shadowHost
@@ -118,6 +117,15 @@ export default function GmailContentScript() {
     }
   }, [handleSelectionChange])
 
+  // After render, measure actual toolbar height and flip above if it overflows viewport
+  useLayoutEffect(() => {
+    if (!visible || !toolbarRef.current) return
+    const tb = toolbarRef.current.getBoundingClientRect()
+    if (tb.bottom > window.innerHeight - 8) {
+      setPosition((p) => ({ ...p, top: p.anchorTop - tb.height - 8 }))
+    }
+  }, [visible, position.anchorBottom])
+
   const handleRewrite = async (mode: RewriteMode) => {
     if (!selectedText) return
 
@@ -128,16 +136,15 @@ export default function GmailContentScript() {
     setError(null)
 
     try {
-      const emailContext = getEmailContext()
+      const slackContext = getSlackContext()
       const { result } = await rewriteText({
         text: selectedText,
         mode,
         promptTemplateId: selectedPromptId || undefined,
-        context: emailContext || undefined,
+        context: slackContext || undefined,
       })
 
       const replaced = replaceSelectedTextInCompose(result, savedRange)
-      console.log('replaced', replaced, result)
       if (!replaced) {
         setError('Could not replace text. Please try again.')
       } else {
@@ -151,15 +158,6 @@ export default function GmailContentScript() {
     }
   }
 
-  // After render, measure actual toolbar height and flip above if it overflows viewport
-  useLayoutEffect(() => {
-    if (!visible || !toolbarRef.current) return
-    const tb = toolbarRef.current.getBoundingClientRect()
-    if (tb.bottom > window.innerHeight - 8) {
-      setPosition((p) => ({ ...p, top: p.anchorTop - tb.height - 8 }))
-    }
-  }, [visible, position.anchorBottom])
-
   if (!visible) return null
 
   return (
@@ -171,7 +169,9 @@ export default function GmailContentScript() {
         left: position.left,
         zIndex: 2147483647,
       }}
-      onMouseDown={() => { toolbarMouseDownRef.current = true }}
+      onMouseDown={() => {
+        toolbarMouseDownRef.current = true
+      }}
       onMouseUp={(e) => e.stopPropagation()}
     >
       <RewriteToolbar
