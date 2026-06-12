@@ -83,12 +83,16 @@ const styles = {
   },
   select: {
     width: '100%',
-    padding: '5px 8px',
+    padding: '5px 28px 5px 8px',
     borderRadius: '6px',
     border: '1px solid #e2e8f0',
     fontSize: '12px',
     color: '#374151',
-    background: '#fff',
+    background: `#f8fafc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 8px center`,
+    backgroundSize: '12px',
+    appearance: 'none' as const,
+    cursor: 'pointer',
+    outline: 'none',
   },
   error: {
     color: '#dc2626',

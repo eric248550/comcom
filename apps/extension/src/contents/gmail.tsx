@@ -144,6 +144,7 @@ export default function GmailContentScript() {
         left: position.left,
         zIndex: 2147483647,
       }}
+      onMouseUp={(e) => e.stopPropagation()}
     >
       <RewriteToolbar
         modes={MODES}
