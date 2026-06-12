@@ -97,3 +97,16 @@ export async function getPrompts(): Promise<PromptTemplate[]> {
   const data = await workerFetch<{ prompts: PromptTemplate[] }>('/api/prompts')
   return data.prompts
 }
+
+export async function getUserInfo(): Promise<{ email: string; name: string } | null> {
+  return new Promise((resolve) => {
+    try {
+      chrome.runtime.sendMessage({ type: 'GET_USER_INFO' }, (resp) => {
+        if (chrome.runtime.lastError) { resolve(null); return }
+        resolve(resp?.userInfo ?? null)
+      })
+    } catch {
+      resolve(null)
+    }
+  })
+}

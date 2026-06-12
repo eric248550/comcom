@@ -1,10 +1,20 @@
 # AI Writer
 
-> Rewrite anything with AI, right in Gmail.
+> Rewrite anything with AI, right in Gmail and Slack.
 
-A self-hostable Chrome Extension + SaaS monorepo that injects an AI writing toolbar into Gmail compose windows. Select text → pick a rewrite mode → done. Supports custom prompt templates per user/org, streaming responses, and a full writing history.
+A self-hostable Chrome Extension + SaaS monorepo that injects an AI writing toolbar into Gmail and Slack. Select text → pick a rewrite mode → done. Supports custom prompt templates per user/org, streaming responses, and a full writing history.
 
-![AI Writer popup](verify-screenshots/2-popup-signed-in.png)
+---
+
+## Demo
+
+**Gmail** — compose and reply with AI-generated drafts:
+
+![Gmail demo](docs/images/gmail.gif)
+
+**Slack** — rewrite messages before you send:
+
+![Slack demo](docs/images/slack.gif)
 
 ---
 

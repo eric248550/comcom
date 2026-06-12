@@ -1,7 +1,7 @@
 import type { PlasmoCSConfig } from 'plasmo'
 import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react'
 import type { RewriteMode, PromptTemplate } from '@comcom/types'
-import { rewriteText, getPrompts } from '../lib/api'
+import { rewriteText, getPrompts, getUserInfo } from '../lib/api'
 import { getSelectedText, replaceSelectedTextInCompose, isInsideSlackCompose, getSlackContext } from '../lib/slack'
 import { RewriteToolbar } from '../components/rewrite-toolbar'
 
@@ -35,14 +35,14 @@ export default function SlackContentScript() {
   const [prompts, setPrompts] = useState<PromptTemplate[]>([])
   const [selectedPromptId, setSelectedPromptId] = useState<string>('')
   const [showPrompts, setShowPrompts] = useState(false)
+  const [currentUserName, setCurrentUserName] = useState<string>('')
   const toolbarRef = useRef<HTMLDivElement>(null)
   const toolbarMouseDownRef = useRef(false)
   const savedRangeRef = useRef<Range | null>(null)
 
   useEffect(() => {
-    getPrompts()
-      .then(setPrompts)
-      .catch(() => {})
+    getPrompts().then(setPrompts).catch(() => {})
+    getUserInfo().then((info) => { if (info?.name) setCurrentUserName(info.name) }).catch(() => {})
   }, [])
 
   const handleSelectionChange = useCallback(() => {
@@ -136,7 +136,7 @@ export default function SlackContentScript() {
     setError(null)
 
     try {
-      const slackContext = getSlackContext()
+      const slackContext = getSlackContext(currentUserName || undefined)
       const { result } = await rewriteText({
         text: selectedText,
         mode,

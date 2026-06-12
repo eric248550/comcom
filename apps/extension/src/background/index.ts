@@ -64,6 +64,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return true
   }
 
+  if (message.type === 'GET_USER_INFO') {
+    chrome.storage.local.get(['user_info'], (result) => {
+      sendResponse({ userInfo: result.user_info ?? null })
+    })
+    return true
+  }
+
   if (message.type === 'SET_AUTH_TOKEN') {
     const data: Record<string, unknown> = { clerk_token: message.token }
     if (message.userInfo) data.user_info = message.userInfo

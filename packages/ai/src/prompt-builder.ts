@@ -13,7 +13,7 @@ const PLATFORM_FORMAT: Record<Platform, string> = {
   gmail:
     'Return ONLY the rewritten email as a complete message. Structure it as:\n- A greeting line addressing the recipient by name (e.g. "Hi [Name],")\n- The body paragraphs, separated by blank lines\n- A closing line (e.g. "Best regards,")\n- The sender\'s name on its own line\n\nDo not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" — use the actual names.',
   slack:
-    'Return ONLY the rewritten message as plain text suitable for a Slack message. Be concise and conversational. Do not add email-style greetings, closings, or signatures. Use plain text; avoid markdown unless the original used it.',
+    'Return ONLY the rewritten message as plain text suitable for a Slack message. Write from the perspective of the person identified as "You are composing as:" in the context — never from another participant\'s perspective. Be concise and conversational. Do not add email-style greetings, closings, or signatures. Use plain text; avoid markdown unless the original used it.',
   web: 'Return ONLY the rewritten text. Do not add any commentary or explanation.',
 }
 

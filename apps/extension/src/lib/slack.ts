@@ -9,8 +9,11 @@ export function isInsideSlackCompose(element: Element | null): boolean {
   return !!element.closest('.ql-editor')
 }
 
-export function getSlackContext(): string {
+export function getSlackContext(currentUserName?: string): string {
   const parts: string[] = []
+
+  // Who is composing — the AI needs this to write from the right perspective
+  if (currentUserName) parts.push(`You are composing as: ${currentUserName}`)
 
   // Channel/DM name from the header
   const channelName =
@@ -34,7 +37,10 @@ export function getSlackContext(): string {
       el.querySelector('[data-qa="message-text"]')?.textContent?.trim() ||
       el.querySelector('.c-message_kit__text')?.textContent?.trim() ||
       ''
-    return text ? `${sender}: ${text}` : null
+    if (!text) return null
+    // Label the composing user's own prior messages so the AI knows their voice
+    const isMe = currentUserName && sender === currentUserName
+    return isMe ? `You (${sender}): ${text}` : `${sender}: ${text}`
   }).filter(Boolean)
 
   if (messages.length > 0) parts.push(`Recent messages:\n${messages.join('\n')}`)

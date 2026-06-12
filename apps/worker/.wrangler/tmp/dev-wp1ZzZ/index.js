@@ -34948,7 +34948,7 @@ var PLATFORM_FORMAT = {
 - The sender's name on its own line
 
 Do not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" \u2014 use the actual names.`,
-  slack: "Return ONLY the rewritten message as plain text suitable for a Slack message. Be concise and conversational. Do not add email-style greetings, closings, or signatures. Use plain text; avoid markdown unless the original used it.",
+  slack: `Return ONLY the rewritten message as plain text suitable for a Slack message. Write from the perspective of the person identified as "You are composing as:" in the context \u2014 never from another participant's perspective. Be concise and conversational. Do not add email-style greetings, closings, or signatures. Use plain text; avoid markdown unless the original used it.`,
   web: "Return ONLY the rewritten text. Do not add any commentary or explanation."
 };
 function buildSystemPrompt(options) {
