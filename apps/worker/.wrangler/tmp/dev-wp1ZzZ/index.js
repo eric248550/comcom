@@ -22043,12 +22043,14 @@ var RewriteModeSchema = external_exports.enum([
   "casual",
   "custom"
 ]);
+var PlatformSchema = external_exports.enum(["slack", "gmail", "web"]);
 var RewriteRequestSchema = external_exports.object({
   text: external_exports.string().min(1).max(1e4),
   mode: RewriteModeSchema,
   promptTemplateId: external_exports.string().optional(),
   variableValues: external_exports.record(external_exports.string()).optional(),
-  context: external_exports.string().max(500).optional()
+  context: external_exports.string().max(500).optional(),
+  platform: PlatformSchema.optional()
 });
 var RewriteResponseSchema = external_exports.object({
   result: external_exports.string(),
@@ -34938,8 +34940,19 @@ var MODE_INSTRUCTIONS = {
   casual: "Rewrite the text in a casual, conversational tone.",
   custom: "Follow the instructions in the system prompt precisely."
 };
+var PLATFORM_FORMAT = {
+  gmail: `Return ONLY the rewritten email as a complete message. Structure it as:
+- A greeting line addressing the recipient by name (e.g. "Hi [Name],")
+- The body paragraphs, separated by blank lines
+- A closing line (e.g. "Best regards,")
+- The sender's name on its own line
+
+Do not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" \u2014 use the actual names.`,
+  slack: "Return ONLY the rewritten message as plain text suitable for a Slack message. Be concise and conversational. Do not add email-style greetings, closings, or signatures. Use plain text; avoid markdown unless the original used it.",
+  web: "Return ONLY the rewritten text. Do not add any commentary or explanation."
+};
 function buildSystemPrompt(options) {
-  const { systemPrompt, companyTone, rewriteMode, variableValues } = options;
+  const { systemPrompt, companyTone, rewriteMode, variableValues, platform: platform2 } = options;
   let resolvedSystemPrompt = systemPrompt ?? "";
   if (variableValues && resolvedSystemPrompt) {
     for (const [key, value] of Object.entries(variableValues)) {
@@ -34966,15 +34979,7 @@ function buildSystemPrompt(options) {
   } else if (resolvedSystemPrompt) {
     parts.push(`Additional context: ${resolvedSystemPrompt}`);
   }
-  parts.push(
-    `Return ONLY the rewritten email as a complete message. Structure it as:
-- A greeting line addressing the recipient by name (e.g. "Hi [Name],")
-- The body paragraphs, separated by blank lines
-- A closing line (e.g. "Best regards,")
-- The sender's name on its own line
-
-Do not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" \u2014 use the actual names.`
-  );
+  parts.push(PLATFORM_FORMAT[platform2 ?? "gmail"]);
   return parts.join("\n\n");
 }
 __name(buildSystemPrompt, "buildSystemPrompt");
@@ -34999,7 +35004,8 @@ async function rewriteText(options) {
     userInput: options.text,
     rewriteMode: options.mode,
     variableValues: options.variableValues,
-    context: options.context
+    context: options.context,
+    platform: options.platform
   });
   const userMessage = buildUserMessage(options.text, options.context);
   const response = await client.chat.completions.create({
@@ -35029,7 +35035,8 @@ async function rewriteTextStream(options, onChunk) {
     userInput: options.text,
     rewriteMode: options.mode,
     variableValues: options.variableValues,
-    context: options.context
+    context: options.context,
+    platform: options.platform
   });
   const userMessage = buildUserMessage(options.text, options.context);
   const stream2 = await client.chat.completions.create({
@@ -35072,6 +35079,7 @@ async function runRewrite(opts) {
     companyTone: org?.writingTone,
     variableValues: opts.variableValues,
     context: opts.context,
+    platform: opts.platform,
     apiKey
   });
   const session = await db.writingSession.create({
@@ -35106,6 +35114,7 @@ async function runRewriteStream(opts, onChunk) {
       companyTone: org?.writingTone,
       variableValues: opts.variableValues,
       context: opts.context,
+      platform: opts.platform,
       apiKey
     },
     (chunk) => {
@@ -35147,6 +35156,7 @@ rewriteRoutes.post("/", zValidator("json", RewriteRequestSchema), async (c) => {
       promptTemplateId: body.promptTemplateId,
       variableValues: body.variableValues,
       context: body.context,
+      platform: body.platform,
       source: c.req.header("x-source") ?? "web"
     });
     return c.json(result);
@@ -35173,6 +35183,7 @@ rewriteRoutes.post("/stream", zValidator("json", RewriteRequestSchema), async (c
           promptTemplateId: body.promptTemplateId,
           variableValues: body.variableValues,
           context: body.context,
+          platform: body.platform,
           source: c.req.header("x-source") ?? "web"
         },
         async (chunk) => {

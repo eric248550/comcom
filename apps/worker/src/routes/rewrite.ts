@@ -27,6 +27,7 @@ rewriteRoutes.post('/', zValidator('json', RewriteRequestSchema), async (c) => {
       promptTemplateId: body.promptTemplateId,
       variableValues: body.variableValues,
       context: body.context,
+      platform: body.platform,
       source: c.req.header('x-source') ?? 'web',
     })
 
@@ -56,6 +57,7 @@ rewriteRoutes.post('/stream', zValidator('json', RewriteRequestSchema), async (c
           promptTemplateId: body.promptTemplateId,
           variableValues: body.variableValues,
           context: body.context,
+          platform: body.platform,
           source: c.req.header('x-source') ?? 'web',
         },
         async (chunk) => {

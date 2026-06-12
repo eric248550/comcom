@@ -134,6 +134,7 @@ export default function GmailContentScript() {
         mode,
         promptTemplateId: selectedPromptId || undefined,
         context: emailContext || undefined,
+        platform: 'gmail',
       })
 
       const replaced = replaceSelectedTextInCompose(result, savedRange)

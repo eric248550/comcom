@@ -1,6 +1,6 @@
 import { rewriteText, rewriteTextStream } from '@comcom/ai'
 import type { PrismaClient } from '@prisma/client'
-import type { RewriteMode, WritingTone } from '@comcom/types'
+import type { RewriteMode, WritingTone, Platform } from '@comcom/types'
 
 interface RewriteServiceOptions {
   db: PrismaClient
@@ -12,6 +12,7 @@ interface RewriteServiceOptions {
   promptTemplateId?: string
   variableValues?: Record<string, string>
   context?: string
+  platform?: Platform
   source?: string
 }
 
@@ -35,6 +36,7 @@ export async function runRewrite(opts: RewriteServiceOptions) {
     companyTone: org?.writingTone as WritingTone | undefined,
     variableValues: opts.variableValues,
     context: opts.context,
+    platform: opts.platform,
     apiKey,
   })
 
@@ -78,6 +80,7 @@ export async function runRewriteStream(
       companyTone: org?.writingTone as WritingTone | undefined,
       variableValues: opts.variableValues,
       context: opts.context,
+      platform: opts.platform,
       apiKey,
     },
     (chunk) => {

@@ -1,6 +1,6 @@
 import { getOpenAIClient } from './client'
 import { buildSystemPrompt, buildUserMessage } from './prompt-builder'
-import type { RewriteMode, WritingTone } from '@comcom/types'
+import type { RewriteMode, WritingTone, Platform } from '@comcom/types'
 
 export interface RewriteOptions {
   text: string
@@ -9,6 +9,7 @@ export interface RewriteOptions {
   companyTone?: WritingTone
   variableValues?: Record<string, string>
   context?: string
+  platform?: Platform
   model?: string
   apiKey?: string
 }
@@ -29,6 +30,7 @@ export async function rewriteText(options: RewriteOptions): Promise<RewriteResul
     rewriteMode: options.mode,
     variableValues: options.variableValues,
     context: options.context,
+    platform: options.platform,
   })
 
   const userMessage = buildUserMessage(options.text, options.context)
@@ -66,6 +68,7 @@ export async function rewriteTextStream(
     rewriteMode: options.mode,
     variableValues: options.variableValues,
     context: options.context,
+    platform: options.platform,
   })
 
   const userMessage = buildUserMessage(options.text, options.context)

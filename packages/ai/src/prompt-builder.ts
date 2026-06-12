@@ -1,4 +1,4 @@
-import type { RewriteMode, WritingTone } from '@comcom/types'
+import type { RewriteMode, WritingTone, Platform } from '@comcom/types'
 
 const MODE_INSTRUCTIONS: Record<RewriteMode, string> = {
   improve: 'Improve the clarity, grammar, and overall quality of the text.',
@@ -9,6 +9,14 @@ const MODE_INSTRUCTIONS: Record<RewriteMode, string> = {
   custom: 'Follow the instructions in the system prompt precisely.',
 }
 
+const PLATFORM_FORMAT: Record<Platform, string> = {
+  gmail:
+    'Return ONLY the rewritten email as a complete message. Structure it as:\n- A greeting line addressing the recipient by name (e.g. "Hi [Name],")\n- The body paragraphs, separated by blank lines\n- A closing line (e.g. "Best regards,")\n- The sender\'s name on its own line\n\nDo not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" — use the actual names.',
+  slack:
+    'Return ONLY the rewritten message as plain text suitable for a Slack message. Be concise and conversational. Do not add email-style greetings, closings, or signatures. Use plain text; avoid markdown unless the original used it.',
+  web: 'Return ONLY the rewritten text. Do not add any commentary or explanation.',
+}
+
 interface BuildPromptOptions {
   systemPrompt?: string
   companyTone?: WritingTone
@@ -16,10 +24,11 @@ interface BuildPromptOptions {
   rewriteMode: RewriteMode
   variableValues?: Record<string, string>
   context?: string
+  platform?: Platform
 }
 
 export function buildSystemPrompt(options: BuildPromptOptions): string {
-  const { systemPrompt, companyTone, rewriteMode, variableValues } = options
+  const { systemPrompt, companyTone, rewriteMode, variableValues, platform } = options
 
   let resolvedSystemPrompt = systemPrompt ?? ''
 
@@ -54,9 +63,7 @@ export function buildSystemPrompt(options: BuildPromptOptions): string {
     parts.push(`Additional context: ${resolvedSystemPrompt}`)
   }
 
-  parts.push(
-    'Return ONLY the rewritten email as a complete message. Structure it as:\n- A greeting line addressing the recipient by name (e.g. "Hi [Name],")\n- The body paragraphs, separated by blank lines\n- A closing line (e.g. "Best regards,")\n- The sender\'s name on its own line\n\nDo not include a subject line. Use the Recipient and Sender names from context if provided. Do not add placeholders like "[Your Name]" — use the actual names.',
-  )
+  parts.push(PLATFORM_FORMAT[platform ?? 'gmail'])
 
   return parts.join('\n\n')
 }

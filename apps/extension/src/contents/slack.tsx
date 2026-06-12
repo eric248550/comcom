@@ -142,6 +142,7 @@ export default function SlackContentScript() {
         mode,
         promptTemplateId: selectedPromptId || undefined,
         context: slackContext || undefined,
+        platform: 'slack',
       })
 
       const replaced = replaceSelectedTextInCompose(result, savedRange)
