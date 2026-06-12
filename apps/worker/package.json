@@ -1,0 +1,29 @@
+{
+  "name": "@comcom/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "build": "wrangler deploy --dry-run",
+    "deploy": "wrangler deploy",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@comcom/ai": "workspace:*",
+    "@comcom/db": "workspace:*",
+    "@comcom/types": "workspace:*",
+    "@clerk/backend": "^1.13.2",
+    "@hono/zod-validator": "^0.4.1",
+    "@neondatabase/serverless": "^0.10.1",
+    "@prisma/adapter-neon": "^5.19.1",
+    "@prisma/client": "^5.19.1",
+    "hono": "^4.6.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "prisma": "^5.19.1",
+    "typescript": "^5.5.4",
+    "wrangler": "^3.80.0"
+  }
+}

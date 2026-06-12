@@ -1,0 +1,76 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id             String           @id @default(cuid())
+  clerkId        String           @unique
+  email          String           @unique
+  name           String?
+  organizationId String?
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
+  prompts        PromptTemplate[]
+  sessions       WritingSession[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([clerkId])
+  @@index([organizationId])
+}
+
+model Organization {
+  id          String           @id @default(cuid())
+  clerkOrgId  String           @unique
+  name        String
+  writingTone Json             @default("{\"voice\":\"professional\",\"formality\":\"semi-formal\"}")
+  users       User[]
+  prompts     PromptTemplate[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([clerkOrgId])
+}
+
+model PromptTemplate {
+  id             String           @id @default(cuid())
+  title          String
+  systemPrompt   String           @db.Text
+  variables      Json             @default("[]")
+  isPublic       Boolean          @default(false)
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization   Organization?    @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  sessions       WritingSession[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model WritingSession {
+  id               String          @id @default(cuid())
+  input            String          @db.Text
+  output           String          @db.Text
+  mode             String
+  promptTemplateId String?
+  promptTemplate   PromptTemplate? @relation(fields: [promptTemplateId], references: [id], onDelete: SetNull)
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokensUsed       Int?
+  source           String          @default("web")
+  createdAt        DateTime        @default(now())
+
+  @@index([userId])
+  @@index([promptTemplateId])
+  @@index([createdAt])
+}

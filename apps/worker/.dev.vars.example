@@ -1,0 +1,7 @@
+# Rename this file to .dev.vars for local wrangler dev
+
+DATABASE_URL="postgresql://user:password@host/dbname?sslmode=require"
+CLERK_SECRET_KEY="sk_test_..."
+CLERK_PUBLISHABLE_KEY="pk_test_..."
+OPENAI_API_KEY="sk-..."
+ALLOWED_ORIGINS="http://localhost:3000,chrome-extension://your-extension-id"

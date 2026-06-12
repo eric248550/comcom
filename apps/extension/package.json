@@ -1,0 +1,30 @@
+{
+  "name": "@comcom/extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@comcom/types": "workspace:*",
+    "@clerk/chrome-extension": "^1.2.5",
+    "plasmo": "^0.89.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@plasmohq/messaging": "^0.6.2",
+    "@types/chrome": "^0.0.279",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "typescript": "^5.5.4"
+  },
+  "manifest": {
+    "name": "AI Writer",
+    "host_permissions": ["https://mail.google.com/*", "http://localhost:3000/*", "http://localhost:8787/*"],
+    "permissions": ["storage", "identity", "cookies", "alarms", "tabs"]
+  }
+}

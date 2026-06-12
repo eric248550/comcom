@@ -1,0 +1,13 @@
+name = "comcom-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+# Local dev: copy .dev.vars.example → .dev.vars and fill in secrets
+# Production: use `wrangler secret put <KEY>`
+
+# [vars]
+# ALLOWED_ORIGINS = "http://localhost:3000"
