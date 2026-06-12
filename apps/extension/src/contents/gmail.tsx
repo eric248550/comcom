@@ -34,6 +34,8 @@ export default function GmailContentScript() {
   const [selectedPromptId, setSelectedPromptId] = useState<string>('')
   const [showPrompts, setShowPrompts] = useState(false)
   const toolbarRef = useRef<HTMLDivElement>(null)
+  const toolbarMouseDownRef = useRef(false)
+  const savedRangeRef = useRef<Range | null>(null)
 
   useEffect(() => {
     getPrompts()
@@ -45,6 +47,10 @@ export default function GmailContentScript() {
     const text = getSelectedText()
 
     if (!text || text.length < 5) {
+      if (toolbarMouseDownRef.current) {
+        toolbarMouseDownRef.current = false
+        return
+      }
       setVisible(false)
       setSelectedText('')
       return
@@ -70,6 +76,7 @@ export default function GmailContentScript() {
     const scrollX = window.scrollX
     const scrollY = window.scrollY
 
+    savedRangeRef.current = range.cloneRange()
     setSelectedText(text)
     setPosition({
       top: rect.bottom + scrollY + 8,
@@ -84,7 +91,15 @@ export default function GmailContentScript() {
     document.addEventListener('keyup', handleSelectionChange)
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (toolbarRef.current && !toolbarRef.current.contains(e.target as Node)) {
+      if (!toolbarRef.current) return
+      // In shadow DOM, clicks inside are retargeted to the shadow host at the document level,
+      // so toolbarRef.contains(e.target) would always be false. Check the shadow host instead.
+      const root = toolbarRef.current.getRootNode()
+      const shadowHost = root instanceof ShadowRoot ? root.host : null
+      const isInsideToolbar = shadowHost
+        ? shadowHost.contains(e.target as Node)
+        : toolbarRef.current.contains(e.target as Node)
+      if (!isInsideToolbar) {
         const selection = window.getSelection()
         if (!selection || selection.toString().length === 0) {
           setVisible(false)
@@ -103,9 +118,7 @@ export default function GmailContentScript() {
   const handleRewrite = async (mode: RewriteMode) => {
     if (!selectedText) return
 
-    // Save the range now (synchronously) — it will be gone after the async API call
-    const sel = window.getSelection()
-    const savedRange = sel && sel.rangeCount > 0 ? sel.getRangeAt(0).cloneRange() : null
+    const savedRange = savedRangeRef.current
 
     setLoading(true)
     setActiveMode(mode)
@@ -146,6 +159,7 @@ export default function GmailContentScript() {
         left: position.left,
         zIndex: 2147483647,
       }}
+      onMouseDown={() => { toolbarMouseDownRef.current = true }}
       onMouseUp={(e) => e.stopPropagation()}
     >
       <RewriteToolbar
