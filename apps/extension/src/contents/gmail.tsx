@@ -2,7 +2,7 @@ import type { PlasmoCSConfig } from 'plasmo'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import type { RewriteMode, PromptTemplate } from '@comcom/types'
 import { rewriteText, getPrompts } from '../lib/api'
-import { getSelectedText, replaceSelectedTextInCompose, isInsideGmailCompose } from '../lib/gmail'
+import { getSelectedText, replaceSelectedTextInCompose, isInsideGmailCompose, getEmailContext } from '../lib/gmail'
 import { RewriteToolbar } from '../components/rewrite-toolbar'
 
 export const config: PlasmoCSConfig = {
@@ -112,10 +112,12 @@ export default function GmailContentScript() {
     setError(null)
 
     try {
+      const emailContext = getEmailContext()
       const { result } = await rewriteText({
         text: selectedText,
         mode,
         promptTemplateId: selectedPromptId || undefined,
+        context: emailContext || undefined,
       })
 
       const replaced = replaceSelectedTextInCompose(result, savedRange)

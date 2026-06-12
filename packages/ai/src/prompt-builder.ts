@@ -55,7 +55,7 @@ export function buildSystemPrompt(options: BuildPromptOptions): string {
   }
 
   parts.push(
-    'Return ONLY the rewritten text. Do not include explanations, labels, or any text other than the rewrite.',
+    'Return ONLY the rewritten email body. Do not include a subject line. Use newlines to separate paragraphs naturally, as a real email would look. Do not include any explanations or labels.',
   )
 
   return parts.join('\n\n')
