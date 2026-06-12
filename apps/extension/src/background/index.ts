@@ -101,7 +101,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({ error: res.statusText }))
-          sendResponse({ error: (err as { error?: string }).error ?? `HTTP ${res.status}` })
+          const errValue = (err as { error?: unknown }).error ?? `HTTP ${res.status}`
+          sendResponse({ error: typeof errValue === 'string' ? errValue : JSON.stringify(errValue) })
           return
         }
 

@@ -39,7 +39,9 @@ export function getSlackContext(): string {
 
   if (messages.length > 0) parts.push(`Recent messages:\n${messages.join('\n')}`)
 
-  return parts.join('\n\n')
+  const context = parts.join('\n\n')
+  // RewriteRequestSchema enforces context max(500)
+  return context.slice(0, 500)
 }
 
 export function replaceSelectedTextInCompose(newText: string, savedRange?: Range | null): boolean {
