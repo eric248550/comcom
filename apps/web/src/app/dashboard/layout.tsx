@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
         <div className="p-4 border-t space-y-3">
           <a
-            href="https://github.com/eroc248550/comcom"
+            href="https://github.com/eric248550/comcom"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"

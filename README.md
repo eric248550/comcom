@@ -149,7 +149,7 @@ Next.js retains only: `POST /api/webhooks/clerk` (user/org sync).
 ### 1. Clone & install
 
 ```bash
-git clone https://github.com/eroc248550/comcom.git
+git clone https://github.com/eric248550/comcom.git
 cd comcom
 pnpm install
 ```
@@ -323,4 +323,4 @@ MIT
 
 ## Author
 
-**Eric Tsai** — [eric248550@gmail.com](mailto:eric248550@gmail.com) · [GitHub @eroc248550](https://github.com/eroc248550)
+**Eric Tsai** — [eric248550@gmail.com](mailto:eric248550@gmail.com) · [GitHub @eric248550](https://github.com/eric248550)
