@@ -2,6 +2,13 @@
 
 > The AI communication tool for Gmail and Slack.
 
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org)
+[![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-orange?logo=cloudflare)](https://workers.cloudflare.com)
+[![OpenAI](https://img.shields.io/badge/OpenAI-gpt--4o--mini-412991?logo=openai)](https://openai.com)
+
+**[🚀 Try the Dashboard](https://comcomweb.vercel.app/)** · If this project helps you, consider giving it a ⭐
+
 A self-hostable Chrome Extension + SaaS monorepo that injects an AI communication toolbar into Gmail and Slack. Select text → pick a rewrite mode → done. Supports custom prompt templates per user/org, streaming responses, and a full writing history.
 
 ---
