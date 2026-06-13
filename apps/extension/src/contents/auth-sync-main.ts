@@ -39,7 +39,7 @@ async function extractClerkSession() {
       window.location.origin,
     )
   } catch (err) {
-    console.debug('[AI Writer] auth-sync error:', err)
+    console.debug('[ComCom] auth-sync error:', err)
   }
 }
 

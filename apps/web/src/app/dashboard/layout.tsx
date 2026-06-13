@@ -15,7 +15,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="w-64 bg-white border-r flex flex-col hidden md:flex">
         <div className="p-6 border-b">
           <Link href="/" className="text-xl font-bold text-blue-600">
-            AI Writer
+            ComCom
           </Link>
         </div>
         <nav className="flex-1 p-4 space-y-1">
@@ -38,7 +38,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="flex-1 flex flex-col">
         <header className="md:hidden bg-white border-b px-4 py-3 flex items-center justify-between">
           <Link href="/" className="text-lg font-bold text-blue-600">
-            AI Writer
+            ComCom
           </Link>
           <UserButton afterSignOutUrl="/" />
         </header>

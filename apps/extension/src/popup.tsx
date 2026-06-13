@@ -78,7 +78,7 @@ export default function Popup() {
         <div style={s.header}>
           <div style={s.logoWrap}>
             <span style={s.logoIcon}>✍️</span>
-            <span style={s.logoText}>AI Writer</span>
+            <span style={s.logoText}>ComCom</span>
           </div>
           <div style={{ ...s.statusPill, background: '#fef2f2' }}>
             <div style={{ ...s.statusDot, background: '#ef4444' }} />
@@ -118,7 +118,7 @@ export default function Popup() {
       <div style={s.header}>
         <div style={s.logoWrap}>
           <span style={s.logoIcon}>✍️</span>
-          <span style={s.logoText}>AI Writer</span>
+          <span style={s.logoText}>ComCom</span>
         </div>
         <div style={s.statusPill}>
           <div style={s.statusDot} />
@@ -156,7 +156,7 @@ export default function Popup() {
       </div>
 
       <p style={s.tip}>
-        Select text in a Gmail compose window to see the AI Writer toolbar.
+        Select text in a Gmail compose window to see the ComCom toolbar.
       </p>
 
       <div style={s.footer}>

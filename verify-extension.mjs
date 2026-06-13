@@ -1,5 +1,5 @@
 /**
- * Playwright end-to-end verification of the AI Writer Chrome extension.
+ * Playwright end-to-end verification of the ComCom Chrome extension.
  */
 
 import { chromium } from '/tmp/pw-verify/node_modules/playwright/index.mjs'

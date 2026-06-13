@@ -5,7 +5,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <header className="container mx-auto px-4 py-6 flex items-center justify-between">
-        <div className="text-2xl font-bold text-blue-600">AI Writer</div>
+        <div className="text-2xl font-bold text-blue-600">ComCom</div>
         <nav className="flex items-center gap-4">
           <SignedOut>
             <SignInButton mode="modal">
@@ -89,7 +89,7 @@ export default function LandingPage() {
       </main>
 
       <footer className="container mx-auto px-4 py-8 text-center text-sm text-gray-500 border-t">
-        © {new Date().getFullYear()} AI Writer. Built for fast-moving teams.
+        © {new Date().getFullYear()} ComCom. Built for fast-moving teams.
       </footer>
     </div>
   )

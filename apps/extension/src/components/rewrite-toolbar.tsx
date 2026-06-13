@@ -131,7 +131,7 @@ export function RewriteToolbar({
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
       <div style={styles.header}>
-        <span style={styles.title}>✨ AI Writer</span>
+        <span style={styles.title}>✨ ComCom</span>
         <button style={styles.closeBtn} onMouseDown={(e) => e.preventDefault()} onClick={onClose} title="Close">
           ×
         </button>

@@ -1,8 +1,8 @@
-# AI Writer
+# ComCom
 
-> Rewrite anything with AI, right in Gmail and Slack.
+> The AI communication tool for Gmail and Slack.
 
-A self-hostable Chrome Extension + SaaS monorepo that injects an AI writing toolbar into Gmail and Slack. Select text → pick a rewrite mode → done. Supports custom prompt templates per user/org, streaming responses, and a full writing history.
+A self-hostable Chrome Extension + SaaS monorepo that injects an AI communication toolbar into Gmail and Slack. Select text → pick a rewrite mode → done. Supports custom prompt templates per user/org, streaming responses, and a full writing history.
 
 ---
 
@@ -159,7 +159,7 @@ pnpm dev
 
 1. Open `chrome://extensions` → enable **Developer mode**
 2. Click **Load unpacked** → select `apps/extension/build/chrome-mv3-dev`
-3. Open Gmail, compose an email, select any text — the AI Writer toolbar appears
+3. Open Gmail, compose an email, select any text — the ComCom toolbar appears
 
 ---
 

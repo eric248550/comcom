@@ -23,7 +23,7 @@
     "typescript": "^5.5.4"
   },
   "manifest": {
-    "name": "AI Writer",
+    "name": "ComCom",
     "host_permissions": ["https://mail.google.com/*", "http://localhost:3000/*", "http://localhost:8787/*"],
     "permissions": ["storage", "identity", "cookies", "alarms", "tabs"]
   }

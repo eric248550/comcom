@@ -6,8 +6,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'AI Writer — Rewrite anything with AI',
-  description: 'Create reusable AI writing prompts and use them directly in Gmail.',
+  title: 'ComCom — The AI communication tool',
+  description: 'AI-powered communication tool for Gmail and Slack. Rewrite, improve, and compose with AI.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
