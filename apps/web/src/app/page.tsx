@@ -57,7 +57,7 @@ export default function LandingPage() {
             style={{ background: 'linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%)', borderColor: '#c7d2fe', color: '#4f46e5' }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
-            Now in beta — Gmail integration live
+            Now in beta — Gmail &amp; Slack integrations live
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 max-w-4xl mx-auto leading-[1.1] tracking-tight">
@@ -66,13 +66,12 @@ export default function LandingPage() {
               className="bg-clip-text text-transparent"
               style={{ backgroundImage: 'linear-gradient(135deg, #4f6ef7 0%, #8b5cf6 100%)' }}
             >
-              right in Gmail
+              right where you write
             </span>
           </h1>
 
           <p className="text-xl text-gray-500 mb-12 max-w-xl mx-auto leading-relaxed">
-            Create reusable AI writing prompts and apply them inside your Gmail compose window.
-            Better emails, faster.
+            Create reusable AI writing prompts and apply them inside Gmail and Slack — without leaving the page.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -92,36 +91,43 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Features */}
-        <section id="features" className="container mx-auto px-6 pb-32">
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: '✍️',
-                title: 'Custom Prompt Templates',
-                desc: 'Build reusable prompts for any writing task — emails, summaries, replies, and more.',
-              },
-              {
-                icon: '📬',
-                title: 'Gmail Integration',
-                desc: 'Select text in any Gmail compose window, click rewrite, done. No tab switching.',
-              },
-              {
-                icon: '🏢',
-                title: 'Team Writing Tone',
-                desc: 'Set company-wide tone guidelines so every rewrite matches your brand voice.',
-              },
-            ].map((f) => (
-              <div
-                key={f.title}
-                className="p-8 rounded-2xl border border-gray-100 hover:border-indigo-100 hover:shadow-md transition-all"
-                style={{ background: 'linear-gradient(145deg, #ffffff 0%, #fafaff 100%)' }}
-              >
-                <div className="text-3xl mb-4">{f.icon}</div>
-                <h3 className="text-base font-semibold text-gray-900 mb-2">{f.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+        {/* Demo section */}
+        <section id="features" className="container mx-auto px-6 pb-32 space-y-24">
+          <div className="text-center mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">See it in action</h2>
+            <p className="mt-3 text-gray-500">Works where you already write — no new tab, no copy-paste.</p>
+          </div>
+
+          {/* Gmail demo */}
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            <div className="md:w-2/5 shrink-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4 text-red-600 bg-red-50">
+                Gmail
               </div>
-            ))}
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">AI rewriting inside Gmail</h3>
+              <p className="text-gray-500 leading-relaxed">
+                A compose bar appears right inside your Gmail window. Describe what you want — or pick a saved prompt — and ComCom rewrites your draft instantly.
+              </p>
+            </div>
+            <div className="flex-1 rounded-2xl overflow-hidden border border-gray-200 shadow-xl">
+              <img src="/gmail.gif" alt="ComCom Gmail demo" className="w-full block" />
+            </div>
+          </div>
+
+          {/* Slack demo */}
+          <div className="flex flex-col md:flex-row-reverse items-center gap-12">
+            <div className="md:w-2/5 shrink-0">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold mb-4 text-purple-600 bg-purple-50">
+                Slack
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Rewrite Slack messages on the fly</h3>
+              <p className="text-gray-500 leading-relaxed">
+                Same experience in Slack. Select your draft, hit rewrite, and send a polished message — without breaking your flow.
+              </p>
+            </div>
+            <div className="flex-1 rounded-2xl overflow-hidden border border-gray-200 shadow-xl">
+              <img src="/slack.gif" alt="ComCom Slack demo" className="w-full block" />
+            </div>
           </div>
         </section>
       </main>
