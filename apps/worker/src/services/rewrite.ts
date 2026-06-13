@@ -1,9 +1,24 @@
 import { rewriteText, rewriteTextStream } from '@comcom/ai'
-import type { PrismaClient } from '@prisma/client'
+import type { DbClient } from '../lib/db'
 import type { RewriteMode, WritingTone, Platform } from '@comcom/types'
 
+export class RateLimitError extends Error {
+  constructor(limit: number) {
+    super(`Daily rewrite limit of ${limit} reached. Try again tomorrow.`)
+  }
+}
+
+async function checkDailyLimit(db: DbClient, userId: string, limit: number) {
+  const startOfDay = new Date()
+  startOfDay.setHours(0, 0, 0, 0)
+  const count = await db.writingSession.count({
+    where: { userId, createdAt: { gte: startOfDay } },
+  })
+  if (count >= limit) throw new RateLimitError(limit)
+}
+
 interface RewriteServiceOptions {
-  db: PrismaClient
+  db: DbClient
   apiKey: string
   userId: string
   orgId: string | null
@@ -14,6 +29,7 @@ interface RewriteServiceOptions {
   context?: string
   platform?: Platform
   source?: string
+  dailyLimit?: number
 }
 
 export async function runRewrite(opts: RewriteServiceOptions) {
@@ -21,6 +37,8 @@ export async function runRewrite(opts: RewriteServiceOptions) {
 
   const user = await db.user.findUnique({ where: { clerkId: userId } })
   if (!user) throw new Error('User not found. Please sign in again.')
+
+  if (opts.dailyLimit) await checkDailyLimit(db, user.id, opts.dailyLimit)
 
   const [template, org] = await Promise.all([
     opts.promptTemplateId
@@ -63,6 +81,8 @@ export async function runRewriteStream(
 
   const user = await db.user.findUnique({ where: { clerkId: userId } })
   if (!user) throw new Error('User not found.')
+
+  if (opts.dailyLimit) await checkDailyLimit(db, user.id, opts.dailyLimit)
 
   const [template, org] = await Promise.all([
     opts.promptTemplateId

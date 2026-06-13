@@ -5,3 +5,4 @@ CLERK_SECRET_KEY="sk_test_..."
 CLERK_PUBLISHABLE_KEY="pk_test_..."
 OPENAI_API_KEY="sk-..."
 ALLOWED_ORIGINS="http://localhost:3000,chrome-extension://your-extension-id"
+DAILY_REWRITE_LIMIT=20

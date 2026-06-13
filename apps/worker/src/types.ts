@@ -6,6 +6,7 @@ export type Bindings = {
   CLERK_PUBLISHABLE_KEY: string
   OPENAI_API_KEY: string
   ALLOWED_ORIGINS: string
+  DAILY_REWRITE_LIMIT?: string
 }
 
 export type Variables = {
