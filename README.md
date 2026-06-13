@@ -24,6 +24,48 @@ A self-hostable Chrome Extension + SaaS monorepo that injects an AI communicatio
 - **Writing history** — every session saved, browsable in the dashboard
 - **Multi-platform ready** — architecture designed to add Slack, LinkedIn, etc. with minimal code
 
+## Web Dashboard
+
+The web app (`apps/web`) is your control center for ComCom. Sign in at `http://localhost:3000` (or your deployed URL) to access it.
+
+### Overview (`/dashboard`)
+
+- **Stats** — prompt template count, rewrites today, total rewrites
+- **Recent Rewrites** — last 5 rewrite sessions with mode and date
+- **Quick Actions** — shortcuts to create a prompt, configure tone, or install the extension
+
+### Prompt Templates (`/dashboard/prompts`)
+
+Create and manage reusable AI prompts that appear inside the ComCom toolbar in Gmail and Slack.
+
+Each template has:
+- **Title** — displayed in the extension toolbar
+- **System Prompt** — the instruction sent to the AI. Use `{{variable_name}}` placeholders for dynamic values
+- **Variables** — define named placeholders with a label and optional default value
+- **Share with organization** — toggle to make the prompt available to all org members
+
+Example system prompt:
+```
+Rewrite the following email in a {{tone}} tone, keeping it under {{max_words}} words.
+```
+
+### Writing History (`/dashboard/history`)
+
+Every rewrite is logged automatically. The history page shows:
+- Original text vs. rewritten text side by side
+- Rewrite mode (improve, shorten, expand, formal, casual, or custom prompt)
+- Source (gmail, slack)
+- Timestamp and token usage
+
+### Settings (`/dashboard/settings`)
+
+Set your organization's default writing tone applied to all AI rewrites:
+- **Voice** — professional, friendly, casual, authoritative, or empathetic
+- **Formality** — formal, semi-formal, or informal
+- **Additional instructions** — free-text style rules (e.g. "Always sign off with Best regards. Avoid jargon.")
+
+---
+
 ## Architecture
 
 ```
