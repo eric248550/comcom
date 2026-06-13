@@ -5,6 +5,7 @@ import { rewriteRoutes } from './routes/rewrite'
 import { promptRoutes } from './routes/prompts'
 import { historyRoutes } from './routes/history'
 import { toneRoutes } from './routes/tone'
+import { usageRoutes } from './routes/usage'
 import type { AppEnv } from './types'
 
 const app = new Hono<AppEnv>()
@@ -21,6 +22,7 @@ app.route('/api/rewrite', rewriteRoutes)
 app.route('/api/prompts', promptRoutes)
 app.route('/api/history', historyRoutes)
 app.route('/api/tone', toneRoutes)
+app.route('/api/usage', usageRoutes)
 
 // 404 catch-all
 app.notFound((c) => c.json({ error: 'Not found' }, 404))

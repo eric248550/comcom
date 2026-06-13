@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
 
 const API_URL = process.env.PLASMO_PUBLIC_API_URL ?? 'http://localhost:3000'
+const WORKER_URL = process.env.PLASMO_PUBLIC_WORKER_URL ?? 'http://localhost:8787'
 
 interface UserInfo { email: string; name: string }
+interface Usage { used: number; limit: number }
 
 export default function Popup() {
   const [loading, setLoading] = useState(true)
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [promptCount, setPromptCount] = useState<number | null>(null)
+  const [usage, setUsage] = useState<Usage | null>(null)
 
   useEffect(() => {
     // Initial read
@@ -16,14 +19,17 @@ export default function Popup() {
       setLoading(false)  // show UI immediately; prompt count loads in the background
 
       if (clerk_token) {
+        const headers = { Authorization: `Bearer ${clerk_token}` }
         try {
-          const res = await fetch(`${API_URL}/api/prompts`, {
-            headers: { Authorization: `Bearer ${clerk_token}` },
-          })
+          const res = await fetch(`${API_URL}/api/prompts`, { headers })
           if (res.ok) {
             const data = await res.json()
             setPromptCount(data.prompts?.length ?? 0)
           }
+        } catch {}
+        try {
+          const res = await fetch(`${WORKER_URL}/api/usage`, { headers })
+          if (res.ok) setUsage(await res.json())
         } catch {}
       }
     })
@@ -37,17 +43,20 @@ export default function Popup() {
       }
       if (changes.clerk_token?.newValue) {
         const token = changes.clerk_token.newValue as string
-        fetch(`${API_URL}/api/prompts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const headers = { Authorization: `Bearer ${token}` }
+        fetch(`${API_URL}/api/prompts`, { headers })
           .then((r) => r.ok ? r.json() : null)
           .then((data) => { if (data) setPromptCount(data.prompts?.length ?? 0) })
           .catch(() => {})
+        fetch(`${WORKER_URL}/api/usage`, { headers })
+          .then((r) => r.ok ? r.json() : null)
+          .then((data) => { if (data) setUsage(data) })
+          .catch(() => {})
       }
       if (changes.clerk_token?.newValue === undefined && changes.clerk_token?.oldValue) {
-        // Token was removed (sign-out)
         setUserInfo(null)
         setPromptCount(null)
+        setUsage(null)
       }
     }
     chrome.storage.onChanged.addListener(handleStorageChange)
@@ -136,12 +145,20 @@ export default function Popup() {
       </div>
 
       {/* Stats */}
-      {promptCount !== null && (
+      {(promptCount !== null || usage !== null) && (
         <div style={s.statRow}>
-          <div style={s.stat}>
-            <span style={s.statValue}>{promptCount}</span>
-            <span style={s.statLabel}>Prompt Templates</span>
-          </div>
+          {promptCount !== null && (
+            <div style={s.stat}>
+              <span style={s.statValue}>{promptCount}</span>
+              <span style={s.statLabel}>Prompt Templates</span>
+            </div>
+          )}
+          {usage !== null && (
+            <div style={{ ...s.stat, ...usageStatStyle(usage.used, usage.limit) }}>
+              <span style={s.statValue}>{usage.used} / {usage.limit}</span>
+              <span style={s.statLabel}>Rewrites today</span>
+            </div>
+          )}
         </div>
       )}
 
@@ -166,6 +183,13 @@ export default function Popup() {
       </div>
     </div>
   )
+}
+
+function usageStatStyle(used: number, limit: number): React.CSSProperties {
+  const ratio = used / limit
+  if (ratio >= 1) return { background: '#fef2f2' }
+  if (ratio >= 0.75) return { background: '#fff7ed' }
+  return {}
 }
 
 // ── Styles ────────────────────────────────────────────────────────────────────
