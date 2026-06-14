@@ -60,7 +60,7 @@ export default async function DashboardPage() {
               <span>Configure writing tone</span>
             </Link>
             <a
-              href="https://chrome.google.com/webstore"
+              href="https://chromewebstore.google.com/detail/comcom/dpmfokapmmmahdkaphlgodghojcdhigo"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-3 p-3 rounded-lg border hover:bg-gray-50 transition-colors text-sm"

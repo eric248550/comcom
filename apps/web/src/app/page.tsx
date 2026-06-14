@@ -83,6 +83,19 @@ export default function LandingPage() {
               Start for free
             </Link>
             <a
+              href="https://chromewebstore.google.com/detail/comcom/dpmfokapmmmahdkaphlgodghojcdhigo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 px-8 py-4 border border-gray-200 text-gray-700 text-base font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#4285F4" strokeWidth="1.5"/>
+                <circle cx="12" cy="12" r="4" fill="#4285F4"/>
+                <path d="M12 8h9.1M6.3 16L1.75 8M17.7 16H6.3" stroke="#4285F4" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+              Add to Chrome
+            </a>
+            <a
               href="#features"
               className="px-8 py-4 border border-gray-200 text-gray-700 text-base font-semibold rounded-xl hover:bg-gray-50 transition-colors"
             >
