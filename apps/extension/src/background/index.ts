@@ -1,6 +1,7 @@
 export {}
 
 const WORKER_URL = process.env.PLASMO_PUBLIC_WORKER_URL ?? 'http://localhost:8787'
+const API_URL = process.env.PLASMO_PUBLIC_API_URL ?? 'http://localhost:3000'
 
 // ── Keepalive ─────────────────────────────────────────────────────────────────
 async function ensureKeepaliveAlarm() {
@@ -26,7 +27,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // fresh one before every API call; fall back to whatever is in storage.
 async function getFreshToken(): Promise<string | null> {
   try {
-    const tabs = await chrome.tabs.query({ url: 'http://localhost:3000/*' })
+    const tabs = await chrome.tabs.query({ url: `${API_URL}/*` })
     for (const tab of tabs) {
       if (!tab.id) continue
       const [result] = await chrome.scripting.executeScript({
