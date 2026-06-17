@@ -13,10 +13,14 @@ export default function Popup() {
   const [usage, setUsage] = useState<Usage | null>(null)
 
   useEffect(() => {
-    // Initial read
-    chrome.storage.local.get(['clerk_token', 'user_info'], async ({ clerk_token, user_info }) => {
+    // Ask background to sync auth from an open web app tab (production fix),
+    // then fall back to whatever is already in storage.
+    chrome.runtime.sendMessage({ type: 'REFRESH_AUTH' }, async (resp) => {
+      const clerk_token: string | null = resp?.token ?? null
+      const user_info: { email: string; name: string } | null = resp?.userInfo ?? null
+
       if (user_info?.email) setUserInfo(user_info)
-      setLoading(false)  // show UI immediately; prompt count loads in the background
+      setLoading(false)
 
       if (clerk_token) {
         const headers = { Authorization: `Bearer ${clerk_token}` }

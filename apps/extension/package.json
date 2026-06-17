@@ -1,10 +1,11 @@
 {
   "name": "@comcom/extension",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
+    "release": "npm version patch --no-git-tag-version && plasmo build && cd build && zip -r comcom-extension.zip chrome-mv3-prod/",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -24,7 +25,19 @@
   },
   "manifest": {
     "name": "ComCom",
-    "host_permissions": ["https://mail.google.com/*", "http://localhost:3000/*", "http://localhost:8787/*"],
-    "permissions": ["storage", "alarms", "tabs"]
+    "host_permissions": [
+      "https://mail.google.com/*",
+      "https://app.slack.com/*",
+      "https://comcomweb.vercel.app/*",
+      "https://comcom-api.pointy-help.workers.dev/*",
+      "http://localhost:3000/*",
+      "http://localhost:8787/*"
+    ],
+    "permissions": [
+      "storage",
+      "alarms",
+      "tabs",
+      "scripting"
+    ]
   }
 }

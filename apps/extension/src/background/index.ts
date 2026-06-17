@@ -23,9 +23,15 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 // ── Token helpers ─────────────────────────────────────────────────────────────
 
-// Clerk session JWTs expire after 60 s. Ask the open localhost:3000 tab for a
-// fresh one before every API call; fall back to whatever is in storage.
-async function getFreshToken(): Promise<string | null> {
+interface AuthInfo {
+  token: string
+  email: string
+  name: string
+}
+
+// Clerk session JWTs expire after 60 s. Ask the open web app tab for a fresh
+// token + user info before every API call; fall back to whatever is in storage.
+async function syncAuthFromTab(): Promise<AuthInfo | null> {
   try {
     const tabs = await chrome.tabs.query({ url: `${API_URL}/*` })
     for (const tab of tabs) {
@@ -36,18 +42,31 @@ async function getFreshToken(): Promise<string | null> {
         func: async () => {
           const c = (window as any).Clerk
           if (!c?.session) return null
-          return (await c.session.getToken()) as string | null
+          const token = (await c.session.getToken()) as string | null
+          if (!token) return null
+          const user = c.user
+          return {
+            token,
+            email: (user?.primaryEmailAddress?.emailAddress ?? '') as string,
+            name: (user?.fullName ?? user?.firstName ?? '') as string,
+          }
         },
       })
-      const token = result?.result as string | null
-      if (token) {
-        chrome.storage.local.set({ clerk_token: token })
-        return token
+      const info = result?.result as AuthInfo | null
+      if (info?.token) {
+        chrome.storage.local.set({ clerk_token: info.token, user_info: { email: info.email, name: info.name } })
+        return info
       }
     }
   } catch {
-    // No localhost tab open or scripting failed — fall through to stored token
+    // Tab not open or scripting failed — fall through to stored token
   }
+  return null
+}
+
+async function getFreshToken(): Promise<string | null> {
+  const info = await syncAuthFromTab()
+  if (info) return info.token
 
   const stored = await new Promise<Record<string, string>>((resolve) =>
     chrome.storage.local.get(['clerk_token'], resolve as any),
@@ -85,6 +104,22 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     chrome.storage.local.remove(['clerk_token', 'user_info'], () => {
       sendResponse({ success: true })
     })
+    return true
+  }
+
+  // Popup calls this on open to proactively sync auth from an open web app tab.
+  if (message.type === 'REFRESH_AUTH') {
+    ;(async () => {
+      const info = await syncAuthFromTab()
+      if (info) {
+        sendResponse({ token: info.token, userInfo: { email: info.email, name: info.name } })
+      } else {
+        const stored = await new Promise<Record<string, any>>((resolve) =>
+          chrome.storage.local.get(['clerk_token', 'user_info'], resolve as any),
+        )
+        sendResponse({ token: stored.clerk_token ?? null, userInfo: stored.user_info ?? null })
+      }
+    })()
     return true
   }
 
